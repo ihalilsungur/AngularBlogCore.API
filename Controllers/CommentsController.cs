@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AngularBlogCore.API.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace AngularBlogCore.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("CorsPolicy")]
     public class CommentsController : ControllerBase
     {
         private readonly masterContext _context;

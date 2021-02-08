@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.Options;
 
 namespace AngularBlogCore.API
@@ -27,13 +28,17 @@ namespace AngularBlogCore.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
             services.AddCors(option =>
             {
-                option.AddDefaultPolicy(x =>
+                option.AddPolicy("CorsPolicy", builder =>
                 {
-                    x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+                    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+                  
                 });
             });
+            
+            
             services.AddDbContext<masterContext>(option =>
             {
                 option.UseSqlServer(Configuration["ConnectionStrings:DefaultSqlConnectionString"]);
@@ -54,10 +59,12 @@ namespace AngularBlogCore.API
                 app.UseHsts();
             }
 
-            app.UseCors();
+            app.UseCors("CorsPolicy");
             app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseMvc();
+          
+
         }
     }
 }
